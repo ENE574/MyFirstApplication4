@@ -1,4 +1,4 @@
-package com.jnu.student;
+package com.jnu.student.Fragment;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -9,10 +9,11 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import com.jnu.student.R;
 
 /**
  * A simple {@link Fragment} subclass.

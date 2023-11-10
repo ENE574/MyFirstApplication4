@@ -5,17 +5,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity">
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tablayout_header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    android:gravity="center"
+    tools:context=".Activity.MainActivity">
 
-    </com.google.android.material.tabs.TabLayout>
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/viewpager2_main"
+    <com.jnu.student.customView.FixedViewPager
+        android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="238dp"
+        android:layout_weight="1" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/no_task"
+        android:textSize="30dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/no_task_content"
+        android:textSize="20dp"/>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/navigation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:itemIconTint="@color/bg_tab"
+        app:itemTextColor="@color/bg_tab"
+        app:menu="@menu/navigation"
+        />
 
-    </androidx.viewpager2.widget.ViewPager2>
 </LinearLayout>
+

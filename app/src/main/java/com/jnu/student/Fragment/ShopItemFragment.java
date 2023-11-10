@@ -1,4 +1,4 @@
-package com.jnu.student;
+package com.jnu.student.Fragment;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -22,6 +22,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import com.jnu.student.Activity.InputShopItemActivity;
+import com.jnu.student.R;
 import com.jnu.student.data.DataSaver;
 import com.jnu.student.data.ShopItem;
 
@@ -43,13 +45,13 @@ public class ShopItemFragment extends Fragment {
             ,result -> {
                 if(null!=result){
                     Intent intent=result.getData();
-                    if(result.getResultCode()==InputShopItemActivity.RESULT_CODE_SUCCESS)
+                    if(result.getResultCode()== InputShopItemActivity.RESULT_CODE_SUCCESS)
                     {
                         Bundle bundle=intent.getExtras();
                         String title= bundle.getString("title");
                         //double price=bundle.getDouble("price");
                         int position=bundle.getInt("position");
-                        shopItems.add(position, new ShopItem(title,R.drawable.book_2) );
+                        shopItems.add(position, new ShopItem(title, R.drawable.book_2) );
                         new DataSaver().Save(this.getContext(),shopItems);
                         mainRecycleViewAdapter.notifyItemInserted(position);
                     }
