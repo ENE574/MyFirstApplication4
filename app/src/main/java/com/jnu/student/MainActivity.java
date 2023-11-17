@@ -25,12 +25,14 @@ public class MainActivity extends AppCompatActivity {
                     return  TecentMapFragment.newInstance();
                 case 2:
                     return BrowserFragment.newInstance();
+                case 3:
+                    return ClockViewFragment.newInstance();
             }
             return ShopItemFragment.newInstance();
         }
         @Override
         public int getItemCount() {
-            return 3;
+            return 4;
         }
     }
     @Override
@@ -55,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case 2:
                         tab.setText(R.string.tab_caption_3_browser);
+                        break;
+                    case 3:
+                        tab.setText(R.string.tab_caption_4_clock);
                         break;
                 }
             }
