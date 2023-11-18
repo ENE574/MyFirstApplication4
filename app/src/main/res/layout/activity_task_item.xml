@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".TaskItemActivity">
-
     <EditText
         android:id="@+id/edit_text_title"
         android:layout_width="0dp"
@@ -20,7 +19,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
     <EditText
         android:id="@+id/editText_Mark"
         android:layout_width="0dp"
@@ -35,7 +33,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_text_title" />
-
     <EditText
         android:id="@+id/editText_Number"
         android:layout_width="0dp"
@@ -50,7 +47,6 @@
         app:layout_constraintEnd_toStartOf="@id/spinner_taskType"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editText_Mark" />
-
     <Spinner
         android:id="@+id/spinner_taskType"
         android:layout_width="wrap_content"
@@ -64,7 +60,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/editText_Number"
         app:layout_constraintTop_toBottomOf="@+id/editText_Mark" />
-
     <MultiAutoCompleteTextView
         android:id="@+id/textView_tag"
         android:layout_width="0dp"
@@ -77,7 +72,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editText_Number" />
-
     <Button
         android:id="@+id/button_ok"
         android:layout_width="0dp"
@@ -90,7 +84,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView_tag" />
-
     <TextView
         android:id="@+id/textView_introduction"
         android:layout_width="0dp"
@@ -105,5 +98,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_ok" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

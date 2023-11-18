@@ -1,4 +1,4 @@
-package com.jnu.student.Fragment;
+package com.jnu.student;
 
 import android.os.Bundle;
 
@@ -8,13 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.jnu.student.R;
-public class RewardFragment extends Fragment {
-    public RewardFragment() {
+public class MineFragment extends Fragment {
+    public MineFragment() {
         // Required empty public constructor
     }
-    public static RewardFragment newInstance() {
-        RewardFragment fragment = new RewardFragment();
+    public static MineFragment newInstance() {
+        MineFragment fragment = new MineFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -23,6 +22,6 @@ public class RewardFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_reward, container, false);
+        return inflater.inflate(R.layout.fragment_mine, container, false);
     }
 }
