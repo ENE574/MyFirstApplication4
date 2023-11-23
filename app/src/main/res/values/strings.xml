@@ -31,4 +31,6 @@
     <string name="add_tag">通过标签对任务进行分类</string>
     <string name="add_ok">完成</string>
     <string name="app_introduction">成就点数：指您每完成一次任务可获得的成就点数。\n数量：指您此任务需要完成的次数。（默认为1次）\n\n每日任务：完成后次日凌晨两点重新出现。\n参考：8点前起床、吃早餐、30分钟有氧运动\n每周任务：完成后下周一凌晨两点重新出现。\n参考：整理房间、给家里打电话\n普通任务：完成后不再重新出现。\n参考：完成会议准备、完成毕业论文\n\n建议将任务可以获得的成就点根据您个人感觉的难易程度设置。</string>
+    <string name="task_empty">无任务\nYesterday, you said tomorrow.</string>
+    <string name="completed_empty">无已完成任务\n赶紧去完成任务吧</string>
 </resources>

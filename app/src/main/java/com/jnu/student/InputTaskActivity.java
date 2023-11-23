@@ -17,7 +17,7 @@ public class InputTaskActivity extends AppCompatActivity implements AdapterView.
     private EditText markEditText;
     private EditText timesEditText;
     private Spinner taskTpyeSpinner;
-    private final static String[] taskTpyeArray = {"每日任务","每周任务","普通任务","副本任务"};
+    private final static String[] taskTpyeArray = {"每日任务","每周任务","普通任务"};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

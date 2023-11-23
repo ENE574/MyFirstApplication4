@@ -1,5 +1,11 @@
 package com.jnu.student;
+
+import java.util.ArrayList;
+
 public class Task {
+    public static ArrayList<Task> taskList0=new ArrayList<>();
+    public static ArrayList<Task> taskList1=new ArrayList<>();
+    public static ArrayList<Task> taskList2=new ArrayList<>();
     private String title;
     private String mark;
     private int type;

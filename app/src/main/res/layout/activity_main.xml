@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,7 +6,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MainActivity">
-
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
@@ -18,27 +15,7 @@
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="541dp"></androidx.viewpager2.widget.ViewPager2>
-
-    <TextView
-        android:id="@+id/textView_marks"
-        android:layout_width="191dp"
-        android:layout_height="88dp"
-        android:layout_gravity="start"
-        android:layout_weight="1"
-        android:gravity="left|center_vertical"
-        android:text="TextView"
-        android:textColor="@color/black"
-        android:textSize="24sp" />
-
-    <ImageButton
-        android:id="@+id/imageButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right|center_vertical"
-        android:background="@android:color/transparent"
-        android:src="@drawable/ok" />
-
+        android:layout_height="605dp"></androidx.viewpager2.widget.ViewPager2>
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/navigation"
         android:layout_width="wrap_content"
