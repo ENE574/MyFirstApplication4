@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
                 case 2:
                     return BrowserFragment.newInstance();
                 case 3:
-                    return ClockViewFragment.newInstance();
+                    return GameViewFragment.newInstance();
             }
             return ShopItemFragment.newInstance();
         }
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
                         tab.setText(R.string.tab_caption_3_browser);
                         break;
                     case 3:
-                        tab.setText(R.string.tab_caption_4_clock);
+                        tab.setText(R.string.tab_caption_4_game);
                         break;
                 }
             }
