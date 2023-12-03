@@ -1,5 +1,4 @@
 package com.jnu.student;
-
 import java.util.ArrayList;
 
 public class Task {
@@ -59,6 +58,9 @@ public class Task {
         else {
             this.complete--;
         }
+    }
+    public void setComplete(int complete){
+        this.complete = complete;
     }
     public int getComplete(){
         return this.complete;

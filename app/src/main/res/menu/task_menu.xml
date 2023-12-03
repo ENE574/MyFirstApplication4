@@ -9,13 +9,16 @@
         <menu>
             <item
                 android:id="@+id/action_add_task"
-                android:title="@string/add_name"/>
-            <item
-                android:id="@+id/action_join_duty"
-                android:title="@string/join_name"/>
+                android:title="@string/add_task"/>
             <item
                 android:id="@+id/action_sort"
                 android:title="@string/sort_name"/>
         </menu>
+    </item>
+    <item
+        android:id="@+id/action_sort_finish"
+        android:title="@string/add_ok"
+        android:visibility="gone"
+        app:showAsAction="always">
     </item>
 </menu>

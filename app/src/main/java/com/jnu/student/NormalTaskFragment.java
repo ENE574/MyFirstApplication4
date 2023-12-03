@@ -16,8 +16,11 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import java.util.Collections;
+
 public class NormalTaskFragment extends Fragment
         implements TaskAdapter.SignalListener, TaskAdapter.OnItemClickListener {
     private RecyclerView recyclerView;
@@ -26,23 +29,21 @@ public class NormalTaskFragment extends Fragment
     static TaskAdapter adapter;
     private ActivityResultLauncher<Intent> addTaskLauncher;
     private ActivityResultLauncher<Intent> editTaskLauncher;
+
     public NormalTaskFragment() {
     }
-    public static NormalTaskFragment newInstance() {
-        NormalTaskFragment fragment = new NormalTaskFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
+
     @Override
     public void onItemClick(int position) {
-        Intent editIntent = new Intent(this.getContext(), TaskItemActivity.class);
-        editIntent.putExtra("id",position);
-        editIntent.putExtra("title", taskList2.get(position).getTitle());
-        editIntent.putExtra("mark", taskList2.get(position).getMark());
-        editIntent.putExtra("times", taskList2.get(position).getTimes());
-        editIntent.putExtra("type", taskList2.get(position).getType());
-        editTaskLauncher.launch(editIntent);
+        if (!adapter.isSortVisible) {
+            Intent editIntent = new Intent(this.getContext(), TaskItemActivity.class);
+            editIntent.putExtra("id", position);
+            editIntent.putExtra("title", taskList2.get(position).getTitle());
+            editIntent.putExtra("mark", taskList2.get(position).getMark());
+            editIntent.putExtra("times", taskList2.get(position).getTimes());
+            editIntent.putExtra("type", taskList2.get(position).getType());
+            editTaskLauncher.launch(editIntent);
+        }
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,6 +60,44 @@ public class NormalTaskFragment extends Fragment
         adapter = new TaskAdapter(taskList2);
         recyclerView.setAdapter(adapter);
         adapter.setSignalListener(this);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
+            @Override
+            public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+                int dragFlags;
+                if (adapter.isSortVisible) {
+                    dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
+                }
+                else {
+                    dragFlags = 0;
+                }
+                int swipeFlags = 0;
+                return makeMovementFlags(dragFlags, swipeFlags);
+            }
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                int fromPosition = viewHolder.getAdapterPosition();
+                int toPosition = target.getAdapterPosition();
+                if (fromPosition < toPosition){
+                    for (int i = fromPosition; i < toPosition; i++)
+                    {
+                        Collections.swap(adapter.taskList, i , i+1);
+                    }
+                }
+                else {
+                    for (int i = fromPosition; i > toPosition; i--)
+                    {
+                        Collections.swap(adapter.taskList, i , i-1);
+                    }
+                }
+                adapter.notifyItemMoved(fromPosition, toPosition);
+                return true;
+            }
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+
+            }
+        });
+        itemTouchHelper.attachToRecyclerView(recyclerView);
         emptyTextView = rootView.findViewById(R.id.textView_task_empty);
         if (taskList2.size() == 0){
             NormalTaskFragment.emptyTextView.setVisibility(View.VISIBLE);
@@ -68,6 +107,12 @@ public class NormalTaskFragment extends Fragment
         }
         registerForContextMenu(recyclerView);
         marksTextView = rootView.findViewById(R.id.textView_marks);
+        if (Mark.marks < 0) {
+            marksTextView.setTextColor(getResources().getColor(R.color.red, requireContext().getTheme()));
+        }
+        else {
+            marksTextView.setTextColor(getResources().getColor(R.color.black, requireContext().getTheme()));
+        }
         marksTextView.setText(String.valueOf(Mark.marks));
         addTask();
         editTask();
@@ -95,9 +140,6 @@ public class NormalTaskFragment extends Fragment
         }
     }
     public void addTask(){
-        if (addTaskLauncher != null) {
-            addTaskLauncher.unregister();
-        }
         addTaskLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -109,17 +151,17 @@ public class NormalTaskFragment extends Fragment
                             int times = data.getIntExtra("times", 1);
                             int type = data.getIntExtra("type", 0);
                             if (type == 0) {
-                                MainActivity.viewPager.setCurrentItem(0);
+                                TaskSelectionFragment.viewPager.setCurrentItem(0);
                                 taskList0.add(new Task(title, mark, times, type));
                                 DayTaskFragment.adapter.notifyItemInserted(taskList0.size());
                             }
                             else if (type == 1) {
-                                MainActivity.viewPager.setCurrentItem(1);
+                                TaskSelectionFragment.viewPager.setCurrentItem(1);
                                 taskList1.add(new Task(title, mark, times, type));
                                 WeekTaskFragment.adapter.notifyItemInserted(taskList1.size());
                             }
                             else if (type == 2) {
-                                MainActivity.viewPager.setCurrentItem(2);
+                                TaskSelectionFragment.viewPager.setCurrentItem(2);
                                 taskList2.add(new Task(title, mark, times, type));
                                 NormalTaskFragment.adapter.notifyItemInserted(taskList2.size());
                             }
@@ -129,9 +171,6 @@ public class NormalTaskFragment extends Fragment
                 });
     }
     public void editTask(){
-        if (editTaskLauncher != null) {
-            editTaskLauncher.unregister();
-        }
         editTaskLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -145,23 +184,23 @@ public class NormalTaskFragment extends Fragment
                             int times = data.getIntExtra("times",1);
                             int id = data.getIntExtra("id",0);
                             if (type == 0) {
-                                MainActivity.viewPager.setCurrentItem(0);
+                                TaskSelectionFragment.viewPager.setCurrentItem(0);
                                 taskList2.remove(id);
                                 NormalTaskFragment.adapter.notifyItemRemoved(id);
                                 taskList0.add(new Task(title, mark, times, type));
                                 DayTaskFragment.adapter.notifyItemInserted(taskList0.size());
                             }
                             else if (type == 1) {
-                                MainActivity.viewPager.setCurrentItem(1);
+                                TaskSelectionFragment.viewPager.setCurrentItem(1);
                                 taskList2.remove(id);
                                 NormalTaskFragment.adapter.notifyItemRemoved(id);
                                 taskList1.add(new Task(title, mark, times, type));
                                 WeekTaskFragment.adapter.notifyItemInserted(taskList1.size());
                             }
                             else if (type == 2) {
-                                MainActivity.viewPager.setCurrentItem(2);
+                                TaskSelectionFragment.viewPager.setCurrentItem(2);
                                 taskList2.set(id, new Task(title, mark, times, type));
-                                WeekTaskFragment.adapter.notifyItemChanged(id);
+                                NormalTaskFragment.adapter.notifyItemChanged(id);
                             }
                             updateEmptyViewVisibility();
                         }
@@ -170,15 +209,28 @@ public class NormalTaskFragment extends Fragment
     }
     @Override
     public void onSignalReceived() {
+        if (Mark.marks < 0) {
+            DayTaskFragment.marksTextView.setTextColor(getResources().getColor(R.color.red, requireContext().getTheme()));
+            WeekTaskFragment.marksTextView.setTextColor(getResources().getColor(R.color.red, requireContext().getTheme()));
+            NormalTaskFragment.marksTextView.setTextColor(getResources().getColor(R.color.red, requireContext().getTheme()));
+            RewardFragment.marksTextView.setTextColor(getResources().getColor(R.color.red, requireContext().getTheme()));
+        }
+        else {
+            DayTaskFragment.marksTextView.setTextColor(getResources().getColor(R.color.black, requireContext().getTheme()));
+            WeekTaskFragment.marksTextView.setTextColor(getResources().getColor(R.color.black, requireContext().getTheme()));
+            NormalTaskFragment.marksTextView.setTextColor(getResources().getColor(R.color.black, requireContext().getTheme()));
+            RewardFragment.marksTextView.setTextColor(getResources().getColor(R.color.black, requireContext().getTheme()));
+        }
         DayTaskFragment.marksTextView.setText(String.valueOf(Mark.marks));
         WeekTaskFragment.marksTextView.setText(String.valueOf(Mark.marks));
         NormalTaskFragment.marksTextView.setText(String.valueOf(Mark.marks));
+        RewardFragment.marksTextView.setText(String.valueOf(Mark.marks));
     }
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
-        inflater.inflate(R.menu.all_menu, menu);
+        inflater.inflate(R.menu.task_menu, menu);
     }
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -187,7 +239,23 @@ public class NormalTaskFragment extends Fragment
             addTaskLauncher.launch(addIntent);
         }
         else if (item.getItemId() == R.id.action_sort) {
+            adapter.isSortVisible = true;
+            adapter.notifyDataSetChanged();
+            requireActivity().invalidateOptionsMenu();
+        }
+        else if (item.getItemId() == R.id.action_sort_finish) {
+            adapter.isSortVisible = false;
+            adapter.notifyDataSetChanged();
+            requireActivity().invalidateOptionsMenu();
         }
         return super.onOptionsItemSelected(item);
+    }
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        MenuItem sortFinishMenuItem = menu.findItem(R.id.action_sort_finish);
+        MenuItem addMenuItem = menu.findItem(R.id.action_add_menu);
+        sortFinishMenuItem.setVisible(adapter.isSortVisible);
+        addMenuItem.setVisible(!adapter.isSortVisible);
     }
 }
