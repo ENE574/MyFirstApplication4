@@ -42,6 +42,11 @@ public class WeekTaskFragment extends Fragment
             editIntent.putExtra("type", taskList1.get(position).getType());
             editTaskLauncher.launch(editIntent);
         }
+        else{
+            adapter.isSortVisible = false;
+            adapter.notifyDataSetChanged();
+            requireActivity().invalidateOptionsMenu();
+        }
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {

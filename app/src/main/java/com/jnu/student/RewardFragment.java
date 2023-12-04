@@ -1,5 +1,9 @@
 package com.jnu.student;
 import static com.jnu.student.Reward.rewardList;
+import static com.jnu.student.Task.taskList0;
+import static com.jnu.student.Task.taskList1;
+import static com.jnu.student.Task.taskList2;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -25,14 +29,15 @@ public class RewardFragment extends Fragment
     private RecyclerView recyclerView;
     static TextView emptyTextView;
     static TextView marksTextView;
-    static RewardAdapter adapter;
+    static TaskAdapter adapter;
+    static RewardAdapter adapter2;
     private ActivityResultLauncher<Intent> addRewardLauncher;
     private ActivityResultLauncher<Intent> editRewardLauncher;
     public RewardFragment() {
     }
     @Override
     public void onItemClick(int position) {
-        if (!adapter.isSortVisible) {
+        if (!adapter2.isSortVisible) {
             Intent editIntent = new Intent(this.getContext(), RewardItemActivity.class);
             editIntent.putExtra("id", position);
             editIntent.putExtra("title", rewardList.get(position).getTitle());
@@ -40,11 +45,36 @@ public class RewardFragment extends Fragment
             editIntent.putExtra("type", rewardList.get(position).getType());
             editRewardLauncher.launch(editIntent);
         }
+        else
+            adapter2.isSortVisible = false;
+            adapter2.notifyDataSetChanged();
+            requireActivity().invalidateOptionsMenu();
+        }
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
+        editRewardLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent data = result.getData();
+                        if (data != null) {
+                            String title = data.getStringExtra("title");
+                            String mark = data.getStringExtra("mark");
+                            int type = data.getIntExtra("type", 0);
+                            int id = data.getIntExtra("id", 0);
+                            rewardList.set(id, new Reward(title, mark, type));
+                            adapter2.notifyItemChanged(id);
+                            if (rewardList.size() == 0) {
+                                RewardFragment.emptyTextView.setVisibility(View.VISIBLE);
+                            } else {
+                                RewardFragment.emptyTextView.setVisibility(View.GONE);
+                            }
+                        }
+                    }
+                });
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,14 +83,14 @@ public class RewardFragment extends Fragment
         recyclerView = rootView.findViewById(R.id.recycle_view_rewards);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         recyclerView.setLongClickable(true);
-        adapter = new RewardAdapter(rewardList);
-        recyclerView.setAdapter(adapter);
-        adapter.setSignalListener(this);
+        adapter2 = new RewardAdapter(rewardList);
+        recyclerView.setAdapter(adapter2);
+        adapter2.setSignalListener(this);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
             @Override
             public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
                 int dragFlags;
-                if (adapter.isSortVisible) {
+                if (adapter2.isSortVisible) {
                     dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
                 }
                 else {
@@ -76,16 +106,16 @@ public class RewardFragment extends Fragment
                 if (fromPosition < toPosition){
                     for (int i = fromPosition; i < toPosition; i++)
                     {
-                        Collections.swap(adapter.rewardList, i , i+1);
+                        Collections.swap(adapter2.rewardList, i , i+1);
                     }
                 }
                 else {
                     for (int i = fromPosition; i > toPosition; i--)
                     {
-                        Collections.swap(adapter.rewardList, i , i-1);
+                        Collections.swap(adapter2.rewardList, i , i-1);
                     }
                 }
-                adapter.notifyItemMoved(fromPosition, toPosition);
+                adapter2.notifyItemMoved(fromPosition, toPosition);
                 return true;
             }
             @Override
@@ -110,9 +140,16 @@ public class RewardFragment extends Fragment
         }
         marksTextView.setText(String.valueOf(Mark.marks));
         addReward();
-        editReward();
-        adapter.setOnItemClickListener(this);
+        adapter2.setOnItemClickListener(this);
         return rootView;
+    }
+    public void updateEmptyViewVisibility() {
+        if (rewardList.size() == 0) {
+            RewardFragment.emptyTextView.setVisibility(View.VISIBLE);
+        }
+        else{
+            RewardFragment.emptyTextView.setVisibility(View.GONE);
+        }
     }
     public void addReward(){
         addRewardLauncher = registerForActivityResult(
@@ -125,7 +162,7 @@ public class RewardFragment extends Fragment
                             String mark = data.getStringExtra("mark");
                             int type = data.getIntExtra("type", 0);
                             rewardList.add(new Reward(title, mark, type));
-                            adapter.notifyItemInserted(rewardList.size());
+                            adapter2.notifyItemInserted(rewardList.size());
                             if (rewardList.size() == 0) {
                                 RewardFragment.emptyTextView.setVisibility(View.VISIBLE);
                             } else {
@@ -136,53 +173,27 @@ public class RewardFragment extends Fragment
                 });
     }
     public void editReward(){
-        editRewardLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK) {
-                        Intent data = result.getData();
-                        if (data != null) {
-                            String title = data.getStringExtra("title");
-                            String mark = data.getStringExtra("mark");
-                            int type = data.getIntExtra("type", 0);
-                            int id = data.getIntExtra("id", 0);
-                            rewardList.set(id, new Reward(title, mark, type));
-                            adapter.notifyItemChanged(id);
-                            if (rewardList.size() == 0) {
-                                RewardFragment.emptyTextView.setVisibility(View.VISIBLE);
-                            } else {
-                                RewardFragment.emptyTextView.setVisibility(View.GONE);
-                            }
-                        }
-                    }
-                });
+        Intent intent = new Intent(getActivity(), RewardItemActivity.class);
+        editRewardLauncher.launch(intent);
     }
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         int fragmentType = MainActivity.bottomViewPager.getCurrentItem();
         if (fragmentType == 1) {
-            AlertDialog alertDialog;
-            alertDialog = new AlertDialog.Builder(this.getContext())
-                    .setTitle("你正在删除奖励")
-                    .setMessage("是否确定删除？")
-                    .setPositiveButton("删除", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            rewardList.remove(item.getOrder());
-                            RewardFragment.adapter.notifyItemRemoved(item.getOrder());
-                            if (rewardList.size() == 0) {
-                                RewardFragment.emptyTextView.setVisibility(View.VISIBLE);
-                            } else {
-                                RewardFragment.emptyTextView.setVisibility(View.GONE);
-                            }
-                        }
-                    }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                        }
-                    }).create();
-            alertDialog.show();
+            switch (item.getItemId()) {
+                case 0:
+                    editReward();
+                    RewardFragment.adapter2.notifyItemRemoved(item.getOrder());
+                    break;
+                case 1:
+                    rewardList.remove(item.getOrder());
+                    RewardFragment.adapter2.notifyItemRemoved(item.getOrder());
+                    break;
+                default:
+                    return super.onContextItemSelected(item);
+            }
         }
+        updateEmptyViewVisibility();
         return super.onContextItemSelected(item);
     }
     @Override
@@ -217,13 +228,13 @@ public class RewardFragment extends Fragment
             addRewardLauncher.launch(addIntent);
         }
         else if (item.getItemId() == R.id.action_sort) {
-            adapter.isSortVisible = true;
-            adapter.notifyDataSetChanged();
+            adapter2.isSortVisible = true;
+            adapter2.notifyDataSetChanged();
             requireActivity().invalidateOptionsMenu(); 
         }
         else if (item.getItemId() == R.id.action_sort_finish) {
-            adapter.isSortVisible = false;
-            adapter.notifyDataSetChanged();
+            adapter2.isSortVisible = false;
+            adapter2.notifyDataSetChanged();
             requireActivity().invalidateOptionsMenu(); 
         }
         return super.onOptionsItemSelected(item);
@@ -233,7 +244,7 @@ public class RewardFragment extends Fragment
         super.onPrepareOptionsMenu(menu);
         MenuItem sortFinishMenuItem = menu.findItem(R.id.action_sort_finish);
         MenuItem addMenuItem = menu.findItem(R.id.action_add_menu);
-        sortFinishMenuItem.setVisible(adapter.isSortVisible);
-        addMenuItem.setVisible(!adapter.isSortVisible);
+        sortFinishMenuItem.setVisible(adapter2.isSortVisible);
+        addMenuItem.setVisible(!adapter2.isSortVisible);
     }
 }

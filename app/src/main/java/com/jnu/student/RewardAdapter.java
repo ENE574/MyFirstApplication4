@@ -56,14 +56,12 @@ public class RewardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
     public class RewardViewHolder extends RecyclerView.ViewHolder
             implements View.OnCreateContextMenuListener{
-        private final CheckBox checkBox;
         private final TextView textViewMark;
         private final TextView textViewRewardTitle;
         private final ImageView sortImageView;
         private final TextView textViewTimes;
         public RewardViewHolder(@NonNull View itemView) {
             super(itemView);
-            checkBox = itemView.findViewById(R.id.checkBox);
             textViewMark = itemView.findViewById(R.id.text_view_mark);
             textViewRewardTitle = itemView.findViewById(R.id.text_view_reward_title);
             sortImageView = itemView.findViewById(R.id.imageView_sort);
@@ -78,46 +76,6 @@ public class RewardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             } else {
                 textViewTimes.setText(reward.getComplete() + "/∞");
             }
-            checkBox.setChecked(false);
-            checkBox.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    AlertDialog alertDialog;
-                    alertDialog = new AlertDialog.Builder(checkBox.getContext())
-                            .setTitle("满足奖励")
-                            .setMessage("确定花费 "+reward.getMark()+" 点成就来满足你的奖励？")
-                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    marks = marks - Integer.parseInt(reward.getMark());
-                                    reward.setComplete(reward.getComplete()+1);
-                                    if (signalListener != null) {
-                                        signalListener.onSignalReceived();
-                                    }
-                                    if (reward.getType() == 0) {
-                                        textViewTimes.setText(reward.getComplete() + "/1");
-                                        rewardList.remove(reward);
-                                        notifyItemRemoved(getAdapterPosition());
-                                        if (rewardList.size() == 0) {
-                                            RewardFragment.emptyTextView.setVisibility(View.VISIBLE);
-                                        } else {
-                                            RewardFragment.emptyTextView.setVisibility(View.GONE);
-                                        }
-                                    }
-                                    else if (reward.getType() == 1) {
-                                        checkBox.setChecked(false);
-                                        textViewTimes.setText(reward.getComplete() + "/∞");
-                                    }
-                                }
-                            }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    checkBox.setChecked(false);
-                                }
-                            }).create();
-                    alertDialog.show();
-                }
-            });
             if (isSortVisible) {
                 sortImageView.setVisibility(View.VISIBLE);
             } else {
@@ -128,6 +86,7 @@ public class RewardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         public void onCreateContextMenu(ContextMenu menu, View view,
                                         ContextMenu.ContextMenuInfo contextMenuInfo) {
             if (!isSortVisible) {
+                menu.add(0, 0, this.getAdapterPosition(), "编辑");
                 menu.add(0, 1, this.getAdapterPosition(), "删除");
             }
         }

@@ -44,6 +44,11 @@ public class NormalTaskFragment extends Fragment
             editIntent.putExtra("type", taskList2.get(position).getType());
             editTaskLauncher.launch(editIntent);
         }
+        else{
+            adapter.isSortVisible = false;
+            adapter.notifyDataSetChanged();
+            requireActivity().invalidateOptionsMenu();
+        }
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {

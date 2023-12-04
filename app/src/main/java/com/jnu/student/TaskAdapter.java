@@ -74,9 +74,6 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             itemView.setOnCreateContextMenuListener(this);
         }
         public void bind(Task task) {
-            Log.d("TaskAdapter", "textViewMark: " + textViewMark);
-            Log.d("TaskAdapter", "textViewTaskTitle: " + textViewTaskTitle);
-            Log.d("TaskAdapter", "textViewTimes: " + textViewTimes);
             textViewMark.setText("+"+task.getMark());
             textViewTaskTitle.setText(task.getTitle());
             textViewTimes.setText(task.getComplete() +"/"+ task.getTimes());
@@ -127,6 +124,7 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         public void onCreateContextMenu(ContextMenu menu, View v,
                                         ContextMenu.ContextMenuInfo menuInfo) {
             if (!isSortVisible) {
+                menu.add(0, 0, this.getAdapterPosition(), "添加提醒");
                 menu.add(0, 1, this.getAdapterPosition(), "删除");
             }
         }

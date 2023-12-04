@@ -43,6 +43,11 @@ public class DayTaskFragment extends Fragment
             editIntent.putExtra("type", taskList0.get(position).getType());
             editTaskLauncher.launch(editIntent);
         }
+        else{
+            adapter.isSortVisible = false;
+            adapter.notifyDataSetChanged();
+            requireActivity().invalidateOptionsMenu();
+        }
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -213,73 +218,19 @@ public class DayTaskFragment extends Fragment
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         int taskType = TaskSelectionFragment.viewPager.getCurrentItem();
         int fragmentType = MainActivity.bottomViewPager.getCurrentItem();
-        AlertDialog alertDialog;
         if (fragmentType == 0) {
             if (taskType == 0) {
-                alertDialog = new AlertDialog.Builder(this.getContext())
-                        .setTitle("你正在删除每日任务")
-                        .setMessage("是否确定删除？")
-                        .setPositiveButton("删除", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                taskList0.remove(item.getOrder());
-                                DayTaskFragment.adapter.notifyItemRemoved(item.getOrder());
-                                if (taskList0.size() == 0) {
-                                    DayTaskFragment.emptyTextView.setVisibility(View.VISIBLE);
-                                } else {
-                                    DayTaskFragment.emptyTextView.setVisibility(View.GONE);
-                                }
-                            }
-                        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                            }
-                        }).create();
-                alertDialog.show();
+                taskList0.remove(item.getOrder());
+                DayTaskFragment.adapter.notifyItemRemoved(item.getOrder());
             } else if (taskType == 1) {
-                alertDialog = new AlertDialog.Builder(this.getContext())
-                        .setTitle("你正在删除每周任务")
-                        .setMessage("是否确定删除？")
-                        .setPositiveButton("删除", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                taskList1.remove(item.getOrder());
-                                WeekTaskFragment.adapter.notifyItemRemoved(item.getOrder());
-                                if (taskList1.size() == 0) {
-                                    WeekTaskFragment.emptyTextView.setVisibility(View.VISIBLE);
-                                } else {
-                                    WeekTaskFragment.emptyTextView.setVisibility(View.GONE);
-                                }
-                            }
-                        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                            }
-                        }).create();
-                alertDialog.show();
+                taskList1.remove(item.getOrder());
+                WeekTaskFragment.adapter.notifyItemRemoved(item.getOrder());
             } else if (taskType == 2) {
-                alertDialog = new AlertDialog.Builder(this.getContext())
-                        .setTitle("你正在删除普通任务")
-                        .setMessage("是否确定删除？")
-                        .setPositiveButton("删除", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                taskList2.remove(item.getOrder());
-                                NormalTaskFragment.adapter.notifyItemRemoved(item.getOrder());
-                                if (taskList2.size() == 0) {
-                                    NormalTaskFragment.emptyTextView.setVisibility(View.VISIBLE);
-                                } else {
-                                    NormalTaskFragment.emptyTextView.setVisibility(View.GONE);
-                                }
-                            }
-                        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                            }
-                        }).create();
-                alertDialog.show();
+                taskList2.remove(item.getOrder());
+                NormalTaskFragment.adapter.notifyItemRemoved(item.getOrder());
             }
         }
+        updateEmptyViewVisibility();
         return super.onContextItemSelected(item);
     }
     @Override
