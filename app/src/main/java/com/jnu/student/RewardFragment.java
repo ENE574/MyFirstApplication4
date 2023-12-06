@@ -1,9 +1,6 @@
 package com.jnu.student;
 import static com.jnu.student.Reward.rewardList;
-import static com.jnu.student.Task.taskList0;
-import static com.jnu.student.Task.taskList1;
-import static com.jnu.student.Task.taskList2;
-
+import static com.jnu.student.Mark.marks;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -27,9 +24,9 @@ import java.util.Collections;
 public class RewardFragment extends Fragment
         implements RewardAdapter.SignalListener,RewardAdapter.OnItemClickListener{
     private RecyclerView recyclerView;
+    private static RewardAdapter.SignalListener signalListener;
     static TextView emptyTextView;
     static TextView marksTextView;
-    static TaskAdapter adapter;
     static RewardAdapter adapter2;
     private ActivityResultLauncher<Intent> addRewardLauncher;
     private ActivityResultLauncher<Intent> editRewardLauncher;
@@ -38,14 +35,33 @@ public class RewardFragment extends Fragment
     @Override
     public void onItemClick(int position) {
         if (!adapter2.isSortVisible) {
-            Intent editIntent = new Intent(this.getContext(), RewardItemActivity.class);
-            editIntent.putExtra("id", position);
-            editIntent.putExtra("title", rewardList.get(position).getTitle());
-            editIntent.putExtra("mark", rewardList.get(position).getMark());
-            editIntent.putExtra("type", rewardList.get(position).getType());
-            editRewardLauncher.launch(editIntent);
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+            builder.setTitle("满足奖励")
+                    .setMessage("确定花费"+adapter2.rewardList.get(position).getMark()+"点成就来满足你的奖励？")
+                    .setPositiveButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .setNegativeButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Reward reward = adapter2.rewardList.get(position);
+                            reward.setComplete(reward.getComplete() + 1);
+                            marks=marks-Integer.parseInt(adapter2.rewardList.get(position).getMark());
+                            onSignalReceived();
+                            if (reward.getType()==0) {
+                                rewardList.remove(reward);
+                            }
+                            adapter2.notifyDataSetChanged();
+                            dialog.dismiss();
+                        }
+                    });
+            AlertDialog dialog = builder.create();
+            dialog.show();
         }
-        else
+        else{
             adapter2.isSortVisible = false;
             adapter2.notifyDataSetChanged();
             requireActivity().invalidateOptionsMenu();

@@ -25,12 +25,7 @@
             android:text="@string/reward_empty"
             />
     </FrameLayout>
-    <ImageView
-        android:id="@+id/imageView_divider"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scaleType="fitXY"
-        android:src="@drawable/blank" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
