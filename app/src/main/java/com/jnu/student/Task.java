@@ -51,14 +51,6 @@ public class Task {
             return false;
         }
     }
-    public void setCompleted(boolean checked) {
-        if (checked){
-            this.complete++;
-        }
-        else {
-            this.complete--;
-        }
-    }
     public void setComplete(int complete){
         this.complete = complete;
     }

@@ -13,11 +13,11 @@ public class PagerAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         switch (position) {
             case 0:
-                return new DayTaskFragment();
+                return DayTaskFragment.newInstance();
             case 1:
-                return new WeekTaskFragment();
+                return WeekTaskFragment.newInstance();
             case 2:
-                return new NormalTaskFragment();
+                return NormalTaskFragment.newInstance();
             default:
                 return null;
         }

@@ -24,7 +24,6 @@ import java.util.Collections;
 public class RewardFragment extends Fragment
         implements RewardAdapter.SignalListener,RewardAdapter.OnItemClickListener{
     private RecyclerView recyclerView;
-    private static RewardAdapter.SignalListener signalListener;
     static TextView emptyTextView;
     static TextView marksTextView;
     static RewardAdapter adapter2;
@@ -71,6 +70,9 @@ public class RewardFragment extends Fragment
     public void onCreate(Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
+        if (editRewardLauncher != null) {
+            editRewardLauncher.unregister();
+        }
         editRewardLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -168,6 +170,9 @@ public class RewardFragment extends Fragment
         }
     }
     public void addReward(){
+        if (addRewardLauncher != null) {
+            addRewardLauncher.unregister();
+        }
         addRewardLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -246,7 +251,7 @@ public class RewardFragment extends Fragment
         else if (item.getItemId() == R.id.action_sort) {
             adapter2.isSortVisible = true;
             adapter2.notifyDataSetChanged();
-            requireActivity().invalidateOptionsMenu(); 
+            requireActivity().invalidateOptionsMenu();
         }
         else if (item.getItemId() == R.id.action_sort_finish) {
             adapter2.isSortVisible = false;

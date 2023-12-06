@@ -41,7 +41,8 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         TaskViewHolder taskViewHolder = (TaskViewHolder) holder;
         Task task = taskList.get(position);
-        taskViewHolder.bind(task);
+        if(task!=null)
+            taskViewHolder.bind(task);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,7 +68,7 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             super(itemView);
             checkBox = itemView.findViewById(R.id.checkBox);
             textViewMark = itemView.findViewById(R.id.text_view_mark);
-            textViewTaskTitle = itemView.findViewById(R.id.text_view_reward_title);
+            textViewTaskTitle = itemView.findViewById(R.id.text_view_task_title);
             pinImageButton = itemView.findViewById(R.id.imageButton_pin);
             sortImageView = itemView.findViewById(R.id.imageView_sort);
             textViewTimes = itemView.findViewById(R.id.textView_times);

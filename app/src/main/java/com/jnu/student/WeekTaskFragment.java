@@ -30,7 +30,12 @@ public class WeekTaskFragment extends Fragment
     private ActivityResultLauncher<Intent> editTaskLauncher;
     public WeekTaskFragment() {
     }
-
+    public static WeekTaskFragment newInstance() {
+        WeekTaskFragment fragment = new WeekTaskFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
+    }
     @Override
     public void onItemClick(int position) {
         if (!adapter.isSortVisible) {
@@ -122,26 +127,35 @@ public class WeekTaskFragment extends Fragment
         return rootView;
     }
     public void updateEmptyViewVisibility() {
-        if (taskList0.size() == 0) {
-            DayTaskFragment.emptyTextView.setVisibility(View.VISIBLE);
+        if(DayTaskFragment.emptyTextView!=null){
+            if (taskList0.size() == 0) {
+                DayTaskFragment.emptyTextView.setVisibility(View.VISIBLE);
+            }
+            else{
+                DayTaskFragment.emptyTextView.setVisibility(View.GONE);
+            }
         }
-        else{
-            DayTaskFragment.emptyTextView.setVisibility(View.GONE);
+        if(WeekTaskFragment.emptyTextView!=null){
+            if (taskList1.size() == 0){
+                WeekTaskFragment.emptyTextView.setVisibility(View.VISIBLE);
+            }
+            else{
+                WeekTaskFragment.emptyTextView.setVisibility(View.GONE);
+            }
         }
-        if (taskList1.size() == 0){
-            WeekTaskFragment.emptyTextView.setVisibility(View.VISIBLE);
-        }
-        else{
-            WeekTaskFragment.emptyTextView.setVisibility(View.GONE);
-        }
-        if (taskList2.size() == 0){
-            NormalTaskFragment.emptyTextView.setVisibility(View.VISIBLE);
-        }
-        else{
-            NormalTaskFragment.emptyTextView.setVisibility(View.GONE);
+        if(NormalTaskFragment.emptyTextView!=null){
+            if (taskList2.size() == 0){
+                NormalTaskFragment.emptyTextView.setVisibility(View.VISIBLE);
+            }
+            else{
+                NormalTaskFragment.emptyTextView.setVisibility(View.GONE);
+            }
         }
     }
     public void addTask() {
+        if (addTaskLauncher != null) {
+            addTaskLauncher.unregister();
+        }
         addTaskLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -173,6 +187,9 @@ public class WeekTaskFragment extends Fragment
                 });
     }
     public void editTask(){
+        if (editTaskLauncher != null) {
+            editTaskLauncher.unregister();
+        }
         editTaskLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -212,21 +229,33 @@ public class WeekTaskFragment extends Fragment
     @Override
     public void onSignalReceived() {
         if (Mark.marks < 0) {
-            DayTaskFragment.marksTextView.setTextColor(getResources().getColor(R.color.red, requireContext().getTheme()));
-            WeekTaskFragment.marksTextView.setTextColor(getResources().getColor(R.color.red, requireContext().getTheme()));
-            NormalTaskFragment.marksTextView.setTextColor(getResources().getColor(R.color.red, requireContext().getTheme()));
-            RewardFragment.marksTextView.setTextColor(getResources().getColor(R.color.red, requireContext().getTheme()));
+            if(DayTaskFragment.marksTextView!=null)
+                DayTaskFragment.marksTextView.setTextColor(getResources().getColor(R.color.red, requireContext().getTheme()));
+            if(WeekTaskFragment.marksTextView!=null)
+                WeekTaskFragment.marksTextView.setTextColor(getResources().getColor(R.color.red, requireContext().getTheme()));
+            if(NormalTaskFragment.marksTextView!=null)
+                NormalTaskFragment.marksTextView.setTextColor(getResources().getColor(R.color.red, requireContext().getTheme()));
+            if(RewardFragment.marksTextView!=null)
+                RewardFragment.marksTextView.setTextColor(getResources().getColor(R.color.red, requireContext().getTheme()));
         }
         else {
-            DayTaskFragment.marksTextView.setTextColor(getResources().getColor(R.color.black, requireContext().getTheme()));
-            WeekTaskFragment.marksTextView.setTextColor(getResources().getColor(R.color.black, requireContext().getTheme()));
-            NormalTaskFragment.marksTextView.setTextColor(getResources().getColor(R.color.black, requireContext().getTheme()));
-            RewardFragment.marksTextView.setTextColor(getResources().getColor(R.color.black, requireContext().getTheme()));
+            if(DayTaskFragment.marksTextView!=null)
+                DayTaskFragment.marksTextView.setTextColor(getResources().getColor(R.color.black, requireContext().getTheme()));
+            if(WeekTaskFragment.marksTextView!=null)
+                WeekTaskFragment.marksTextView.setTextColor(getResources().getColor(R.color.black, requireContext().getTheme()));
+            if(NormalTaskFragment.marksTextView!=null)
+                NormalTaskFragment.marksTextView.setTextColor(getResources().getColor(R.color.black, requireContext().getTheme()));
+            if(RewardFragment.marksTextView!=null)
+                RewardFragment.marksTextView.setTextColor(getResources().getColor(R.color.black, requireContext().getTheme()));
         }
-        DayTaskFragment.marksTextView.setText(String.valueOf(Mark.marks));
-        WeekTaskFragment.marksTextView.setText(String.valueOf(Mark.marks));
-        NormalTaskFragment.marksTextView.setText(String.valueOf(Mark.marks));
-        RewardFragment.marksTextView.setText(String.valueOf(Mark.marks));
+        if(DayTaskFragment.marksTextView!=null)
+            DayTaskFragment.marksTextView.setText(String.valueOf(Mark.marks));
+        if(WeekTaskFragment.marksTextView!=null)
+            WeekTaskFragment.marksTextView.setText(String.valueOf(Mark.marks));
+        if(NormalTaskFragment.marksTextView!=null)
+            NormalTaskFragment.marksTextView.setText(String.valueOf(Mark.marks));
+        if(RewardFragment.marksTextView!=null)
+            RewardFragment.marksTextView.setText(String.valueOf(Mark.marks));
     }
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
