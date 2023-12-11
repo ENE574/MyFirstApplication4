@@ -1,7 +1,6 @@
 package com.jnu.student;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,20 +12,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
-public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class FinishedTaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     List<Task> taskList;
     private Context mcontext;
-    private OnItemClickListener onItemClickListener;
     boolean isSortVisible = false;
-    public TaskAdapter(List<Task> taskList,Context context) {
+    public FinishedTaskAdapter(List<Task> taskList, Context context) {
         this.taskList = taskList;
         this.mcontext = context;
-    }
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        this.onItemClickListener = listener;
-    }
-    public interface OnItemClickListener {
-        void onItemClick(int position);
     }
     @NonNull
     @Override
@@ -38,16 +30,8 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         TaskViewHolder taskViewHolder = (TaskViewHolder) holder;
         Task task = taskList.get(position);
-        if(task!=null)
-            taskViewHolder.bind(task);
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (onItemClickListener != null) {
-                    onItemClickListener.onItemClick(position);
-                }
-            }
-        });
+        taskViewHolder.bind(task);
+
     }
     @Override
     public int getItemCount() {
@@ -73,6 +57,7 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
         public void bind(Task task) {
             textViewMark.setText("+"+task.getMark());
+
             textViewTaskTitle.setText(task.getTitle());
             textViewTimes.setText(task.getComplete() +"/"+ task.getTimes());
             if (task.isPinned()) {
@@ -93,7 +78,7 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     }
                 }
             });
-            checkBox.setChecked(task.isCompleted());
+            checkBox.setChecked(task.getComplete() > 0);
             checkBox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -121,7 +106,7 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     WeekTaskFragment.marksTextView.setText(String.valueOf(Mark.marks));
                     NormalTaskFragment.marksTextView.setText(String.valueOf(Mark.marks));
                     RewardFragment.marksTextView.setText(String.valueOf(Mark.marks));
-                    checkBox.setChecked(task.isCompleted());
+                    checkBox.setChecked(task.getComplete() > 0);
                     textViewTimes.setText(task.getComplete() +"/"+ task.getTimes());
                 }
             });
@@ -132,12 +117,7 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             }
         }
         @Override
-        public void onCreateContextMenu(ContextMenu menu, View v,
-                                        ContextMenu.ContextMenuInfo menuInfo) {
-            if (!isSortVisible) {
-                menu.add(0, 0, this.getAdapterPosition(), "添加提醒");
-                menu.add(0, 1, this.getAdapterPosition(), "删除");
-            }
+        public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
         }
     }
 }

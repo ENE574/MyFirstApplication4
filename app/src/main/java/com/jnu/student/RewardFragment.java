@@ -103,7 +103,6 @@ public class RewardFragment extends Fragment
         recyclerView.setLongClickable(true);
         adapter2 = new RewardAdapter(rewardList);
         recyclerView.setAdapter(adapter2);
-        adapter2.setSignalListener(this);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
             @Override
             public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {

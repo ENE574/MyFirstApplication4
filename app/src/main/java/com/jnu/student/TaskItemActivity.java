@@ -40,6 +40,7 @@ public class TaskItemActivity extends AppCompatActivity implements AdapterView.O
                 Intent resultIntent = new Intent();
                 resultIntent.putExtra("title", titleEditText.getText().toString());
                 resultIntent.putExtra("mark", markEditText.getText().toString());
+                resultIntent.putExtra("type", taskTpyeSpinner.getSelectedItemPosition());
                 resultIntent.putExtra("times", Integer.parseInt(timesEditText.getText().toString()));
                 resultIntent.putExtra("id",id);
                 setResult(Activity.RESULT_OK, resultIntent);

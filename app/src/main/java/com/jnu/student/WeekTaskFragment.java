@@ -11,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -19,12 +20,16 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+
 public class WeekTaskFragment extends Fragment
-        implements TaskAdapter.SignalListener, TaskAdapter.OnItemClickListener {
+        implements  TaskAdapter.OnItemClickListener {
     private RecyclerView recyclerView;
     static TextView emptyTextView;
     static TextView marksTextView;
+    static ImageButton okImageButton;
     static TaskAdapter adapter;
     private ActivityResultLauncher<Intent> addTaskLauncher;
     private ActivityResultLauncher<Intent> editTaskLauncher;
@@ -65,9 +70,8 @@ public class WeekTaskFragment extends Fragment
         recyclerView = rootView.findViewById(R.id.recycle_view_tasks);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         recyclerView.setLongClickable(true);
-        adapter = new TaskAdapter(taskList1);
+        adapter = new TaskAdapter(taskList1, this.getContext());
         recyclerView.setAdapter(adapter);
-        adapter.setSignalListener(this);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
             @Override
             public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
@@ -121,6 +125,41 @@ public class WeekTaskFragment extends Fragment
             marksTextView.setTextColor(getResources().getColor(R.color.black, requireContext().getTheme()));
         }
         marksTextView.setText(String.valueOf(Mark.marks));
+        okImageButton = rootView.findViewById(R.id.imageButton);
+        okImageButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                if (okImageButton.getDrawable().getConstantState().equals(getResources().getDrawable(R.drawable.ok, getContext().getTheme()).getConstantState())){
+                    List<Task> taskList_ok = new ArrayList<>();
+                    for (Task task: taskList1) {
+                        if (task.getComplete() > 0){
+                            taskList_ok.add(task);
+                        }
+                    }
+                    emptyTextView.setText(R.string.completed_empty);
+                    if (taskList_ok.size() == 0) {
+                        emptyTextView.setVisibility(View.VISIBLE);
+                    }
+                    else{
+                        emptyTextView.setVisibility(View.GONE);
+                    }
+                    FinishedTaskAdapter adapter_ok = new FinishedTaskAdapter(taskList_ok, getContext());
+                    recyclerView.setAdapter(adapter_ok);
+                    okImageButton.setImageResource(R.drawable.ok_checked);
+                }
+                else {
+                    emptyTextView.setText(R.string.task_empty);
+                    if (taskList1.size() == 0) {
+                        emptyTextView.setVisibility(View.VISIBLE);
+                    }
+                    else{
+                        emptyTextView.setVisibility(View.GONE);
+                    }
+                    recyclerView.setAdapter(adapter);
+                    okImageButton.setImageResource(R.drawable.ok);
+                }
+            }
+        });
         addTask();
         editTask();
         adapter.setOnItemClickListener(this);
@@ -225,37 +264,6 @@ public class WeekTaskFragment extends Fragment
                         }
                     }
                 });
-    }
-    @Override
-    public void onSignalReceived() {
-        if (Mark.marks < 0) {
-            if(DayTaskFragment.marksTextView!=null)
-                DayTaskFragment.marksTextView.setTextColor(getResources().getColor(R.color.red, requireContext().getTheme()));
-            if(WeekTaskFragment.marksTextView!=null)
-                WeekTaskFragment.marksTextView.setTextColor(getResources().getColor(R.color.red, requireContext().getTheme()));
-            if(NormalTaskFragment.marksTextView!=null)
-                NormalTaskFragment.marksTextView.setTextColor(getResources().getColor(R.color.red, requireContext().getTheme()));
-            if(RewardFragment.marksTextView!=null)
-                RewardFragment.marksTextView.setTextColor(getResources().getColor(R.color.red, requireContext().getTheme()));
-        }
-        else {
-            if(DayTaskFragment.marksTextView!=null)
-                DayTaskFragment.marksTextView.setTextColor(getResources().getColor(R.color.black, requireContext().getTheme()));
-            if(WeekTaskFragment.marksTextView!=null)
-                WeekTaskFragment.marksTextView.setTextColor(getResources().getColor(R.color.black, requireContext().getTheme()));
-            if(NormalTaskFragment.marksTextView!=null)
-                NormalTaskFragment.marksTextView.setTextColor(getResources().getColor(R.color.black, requireContext().getTheme()));
-            if(RewardFragment.marksTextView!=null)
-                RewardFragment.marksTextView.setTextColor(getResources().getColor(R.color.black, requireContext().getTheme()));
-        }
-        if(DayTaskFragment.marksTextView!=null)
-            DayTaskFragment.marksTextView.setText(String.valueOf(Mark.marks));
-        if(WeekTaskFragment.marksTextView!=null)
-            WeekTaskFragment.marksTextView.setText(String.valueOf(Mark.marks));
-        if(NormalTaskFragment.marksTextView!=null)
-            NormalTaskFragment.marksTextView.setText(String.valueOf(Mark.marks));
-        if(RewardFragment.marksTextView!=null)
-            RewardFragment.marksTextView.setText(String.valueOf(Mark.marks));
     }
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {

@@ -11,12 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 public class RewardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     List<Reward> rewardList;
-    private static SignalListener signalListener;
     private OnItemClickListener onItemClickListener;
     boolean isSortVisible = false;
-    public void setSignalListener(SignalListener listener) {
-        signalListener = listener;
-    }
     public RewardAdapter(List<Reward> rewardList) {
         this.rewardList = rewardList;
     }

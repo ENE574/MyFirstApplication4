@@ -31,5 +31,5 @@
     <string name="task_empty">无任务\nYesterday, you said tomorrow.</string>
     <string name="completed_empty">无已完成任务\n赶紧去完成任务吧</string>
     <string name="reward_introduction">欲望是您希望拥有、达成的事物。\n\n单次欲望：只需要满足一次的欲望。\n参考：进行一次周边游、买一条Nudie Jeans牛仔裤\n不限次欲望：可多次满足的欲望。\n参考：打一把lol、约一场电影、吃一次甜品。\n\n建议将欲望消耗的成就点根据您个人感觉的难易程度设置。</string>
-    <string name="reward_empty">无奖励\n弗洛伊德认为,人的潜意识中储存着很多原\n始的欲望与冲动</string>
+    <string name="reward_empty">无奖励\n  弗洛伊德认为,人的潜意识中储存着很多原  \n始的欲望与冲动</string>
 </resources>
