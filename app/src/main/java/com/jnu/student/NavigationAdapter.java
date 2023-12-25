@@ -16,14 +16,12 @@ public class NavigationAdapter extends FragmentStateAdapter {
                 return new TaskSelectionFragment();
             case 1:
                 return new RewardFragment();
-            case 2:
-                return new MineFragment();
             default:
                 return null;
         }
     }
     @Override
     public int getItemCount() {
-        return 3;
+        return 2;
     }
 }

@@ -135,7 +135,6 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         public void onCreateContextMenu(ContextMenu menu, View v,
                                         ContextMenu.ContextMenuInfo menuInfo) {
             if (!isSortVisible) {
-                menu.add(0, 0, this.getAdapterPosition(), "添加提醒");
                 menu.add(0, 1, this.getAdapterPosition(), "删除");
             }
         }

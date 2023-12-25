@@ -12,10 +12,4 @@
         android:icon="@drawable/reward"
         android:title="奖励"
         />
-    <item
-        android:orderInCategory="2"
-        android:id="@+id/navigation_notifications"
-        android:icon="@drawable/mine"
-        android:title="我的"
-        />
 </menu>

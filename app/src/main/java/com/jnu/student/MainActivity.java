@@ -57,10 +57,6 @@ public class MainActivity extends AppCompatActivity {
                     bottomViewPager.setCurrentItem(1);
                     return true;
                 }
-                if (item.getItemId() == R.id.navigation_notifications) {
-                    bottomViewPager.setCurrentItem(2);
-                    return true;
-                }
                 return false;
             }
         });
